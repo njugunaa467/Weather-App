@@ -1,26 +1,29 @@
-const config = {
-    apiKey: '53b5e01fe26c4efb2d6d867b8f475a88'
-};
+
+const apiKey = '53b5e01fe26c4efb2d6d867b8f475a88';
 
 if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition);
+    navigator.geolocation.getCurrentPosition(showPosition, handleGeolocationError);
 } else {
     alert("Geolocation is not supported by this browser.");
 }
 
 function showPosition(position) {
-    let lat = position.coords.latitude;
-    let lon = position.coords.longitude;
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
     getWeatherData(lat, lon);
 }
 
+function handleGeolocationError(error) {
+    alert(`Error fetching location: ${error.message}`);
+}
+
 function getWeatherData(lat, lon) {
-    const url = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${config.apiKey}&units=metric`;
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
 
     fetch(url)
         .then(response => response.json())
         .then(data => displayWeather(data))
-        .catch(error => console.error('Error fetching weather data:', error));
+        .catch(error => alert('Error fetching weather data: ' + error.message));
 }
 
 function displayWeather(data) {
@@ -34,11 +37,15 @@ function displayWeather(data) {
 }
 
 function searchWeather() {
-    const city = document.getElementById('city').value;
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${config.apiKey}&units=metric`;
+    const city = document.getElementById('city').value.trim();
+    if (city === '') {
+        alert("Please enter a city name.");
+        return;
+    }
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
 
     fetch(url)
         .then(response => response.json())
         .then(data => displayWeather(data))
-        .catch(error => console.error('Error fetching weather data:', error));
+        .catch(error => alert('Error fetching weather data: ' + error.message));
 }

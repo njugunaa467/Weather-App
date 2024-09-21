@@ -1,17 +1,33 @@
 {
+  
   "name": "weather-app",
+  
   "version": "1.0.0",
+  
   "main": "config.js",
+  
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+  
+    
+  "test": "echo \"Error: no test specified\" && exit 1",
+  
+    
+  "start": "node server.js"
+  
   },
+  
   "keywords": [],
+  
   "author": "",
+  
   "license": "ISC",
+  
   "dependencies": {
-    "express": "^4.20.0"
+  
+    
+  "express": "^4.21.0"
+  
   },
-  "devDependencies": {},
+  
   "description": ""
 }
