@@ -5,13 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather-App</title>
 </head>
+<style>
+       body {
+            font-family: Arial, sans-serif;
+            background-image: url(weather.png);
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+
+        h1 {
+            background-color:  #4682B4;
+            color: white;
+            text-align: center;
+            width: 100%;
+            padding: 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            margin: 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+
+        #container {
+            background-color: white;
+            padding: 20px;
+            border: 2px solid #4682B4;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 400px;
+        }
+
+        input[type="text"], button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4682B4;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #5a9bd4;
+        }
+
+        a {
+            text-decoration: none;
+            color: #4682B4;
+            margin: 5px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        #weather {
+            margin-top: 20px;
+        }
+
+        .links {
+            margin-top: 20px;
+        }
+</style>
 <body>
-    <h1>Weather App</h1>
+    <header>
+   <h1>Weather App</h1>
     
+</header>
+
+    <div id="container">
     <div id="weather"></div>
     
     <input type="text" id="city" placeholder="Enter city name">
     <button onclick="searchWeather()">Get Weather</button>
+</div>
+    
 
     <script>
         const apiKey = '53b5e01fe26c4efb2d6d8b8f475a8678';
