@@ -3,149 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather-App</title>
+    <title> Weather Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-<style>
-       body {
-            font-family: Arial, sans-serif;
-            background-image: url(weather.png);
-            background-size: cover;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        
-
-        h1 {
-            background-color:  #4682B4;
-            color: white;
-            text-align: center;
-            width: 100%;
-            padding: 20px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            margin: 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-
-        #container {
-            background-color: white;
-            padding: 20px;
-            border: 2px solid #4682B4;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 400px;
-        }
-
-        input[type="text"], button {
-            padding: 10px;
-            margin: 10px 0;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        button {
-            background-color: #4682B4;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #5a9bd4;
-        }
-
-        a {
-            text-decoration: none;
-            color: #4682B4;
-            margin: 5px;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        #weather {
-            margin-top: 20px;
-        }
-
-        .links {
-            margin-top: 20px;
-        }
-</style>
 <body>
-    <header>
-   <h1>Weather App</h1>
-    
-</header>
+    <div class="container">
+        <header>
+            <h1>Weather Dashboard</h1>
+        </header>
 
-    <div id="container">
-    <div id="weather"></div>
-    
-    <input type="text" id="city" placeholder="Enter city name">
-    <button onclick="searchWeather()">Get Weather</button>
-</div>
-    
+        <div class="search-bar">
+            <input 
+                type="text" 
+                id="city" 
+                placeholder="Search for a city..." 
+                autocomplete="off"
+            >
+            <button onclick="handleSearch()">Search</button>
+        </div>
 
-    <script>
-        const apiKey = '53b5e01fe26c4efb2d6d8b8f475a8678';
+        <div class="error" id="error"></div>
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Loading weather data...</p>
+        </div>
 
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition, showError);
-        } else {
-            alert("Geolocation is not supported by this browser.");
-        }
+        <div class="dashboard" id="dashboard" style="display: none;">
+            <div class="card">
+                <div class="weather-main">
+                    <div class="weather-info">
+                        <h2 id="city-name"></h2>
+                        <div class="season" id="season-info"></div>
+                        <div class="weather-icon">
+                            <img id="weather-icon" src="" alt="weather icon">
+                        </div>
+                        <div class="temperature" id="temperature"></div>
+                        <div class="description" id="description"></div>
+                    </div>
+                </div>
 
-        function showPosition(position) {
-            const { latitude: lat, longitude: lon } = position.coords;
-            fetchWeatherData(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`);
-        }
+                <div class="weather-details">
+                    <div class="detail-item">
+                        <div class="label">Humidity</div>
+                        <div class="value" id="humidity">-</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="label">Wind Speed</div>
+                        <div class="value" id="wind-speed">-</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="label">Pressure</div>
+                        <div class="value" id="pressure">-</div>
+                    </div>
+                </div>
+            </div>
 
-        function showError(error) {
-            alert(`Geolocation error: ${error.message}`);
-        }
+            <div class="card forecast">
+                <h3>5-Day Forecast</h3>
+                <div class="forecast-scroll" id="forecast-container"></div>
+            </div>
 
-        function fetchWeatherData(url) {
-            fetch(url)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok.');
-                    }
-                    return response.json();
-                })
-                .then(data => displayWeather(data))
-                .catch(error => alert('Error fetching weather data: ' + error.message));
-        }
+            <div class="card chart-wrapper">
+                <h3>Temperature Trend</h3>
+                <div class="chart-container">
+                    <canvas id="temperatureChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        function displayWeather(data) {
-            const weatherContainer = document.getElementById('weather');
-            if (data && data.main && data.weather) {
-                weatherContainer.innerHTML = `
-                    <h2>Weather in ${data.name}</h2>
-                    <p>Temperature: ${data.main.temp}°C</p>
-                    <p>Conditions: ${data.weather[0].description}</p>
-                    <p>Wind Speed: ${data.wind.speed} m/s</p>
-                `;
-            } else {
-                weatherContainer.innerHTML = '<p>No weather data available.</p>';
-            }
-        }
-
-        function searchWeather() {
-            const city = document.getElementById('city').value.trim();
-            if (city) {
-                fetchWeatherData(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`);
-            } else {
-                alert("Please enter a city name.");
-            }
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
